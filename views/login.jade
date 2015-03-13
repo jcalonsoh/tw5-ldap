@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  .container
+    form.form-signin(action="/login", method="post")
+      img(src='/images/logobbr.png')
+      h2.form-signin-heading Iniciar session
+      input.input-block-level(type="text", name="username", placeholder="Usuario" )
+      input.input-block-level(type="password", name="password", placeholder="Contraseña" )
+      label.checkbox.
+        <input type="checkbox" value="remember-me" /> Recordar 
+      button.btn.btn-large.btn-primary(type="submit") Acceder
