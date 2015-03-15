@@ -3,23 +3,15 @@ var router = express.Router();
 var passport = require('passport');
 var LdapStrategy = require('passport-ldapauth');
 
-var OPTS = {
-  server: {
-    url: 'ldap://10.200.201.98:389',
-    bindDn: 'cn=root,dc=bbr,dc=cl',
-    bindCredentials: 'dev.tes.123',
-    searchBase: 'dc=bbr,dc=cl',
-    searchFilter: '(uid={{username}})'
-  }
-};
+var configs = require('../lib/configs');
 
-passport.use(new LdapStrategy(OPTS));
+passport.use(new LdapStrategy(configs.get('ldap')));
 
 router.use(passport.initialize());
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('login', { title: 'Express' });
 });
 
 router.get('/login', function(req, res, next) {

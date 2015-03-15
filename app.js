@@ -64,7 +64,10 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+
+var servers_config = configs.get('server');
+
+var port = normalizePort(servers_config.server.port || '3000');
 app.set('port', port);
 
 /**
@@ -136,7 +139,7 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
+  var addr = servers_config.server.ip_address || server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
