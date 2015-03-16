@@ -4,6 +4,9 @@ var passport = require('passport');
 var LdapStrategy = require('passport-ldapauth');
 
 var configs = require('../lib/configs');
+var checker_ldap = require('../lib/check_ldap_service');
+
+console.log(checker_ldap.enable);
 
 passport.use(new LdapStrategy(configs.get('ldap')));
 
