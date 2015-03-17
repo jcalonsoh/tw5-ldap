@@ -4,9 +4,10 @@ var passport = require('passport');
 var LdapStrategy = require('passport-ldapauth');
 
 var configs = require('../lib/configs');
-var checker_ldap = require('../lib/check_ldap_service');
 
-console.log(checker_ldap.enable);
+var check_ldap_service = require('../lib/check_ldap_service');
+
+//console.log(check_ldap_service);
 
 passport.use(new LdapStrategy(configs.get('ldap')));
 
@@ -14,7 +15,7 @@ router.use(passport.initialize());
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('login', { title: 'Express' });
+  res.render('login', { title: 'Tiddly Wiki LDAP login' });
 });
 
 router.get('/login', function(req, res, next) {

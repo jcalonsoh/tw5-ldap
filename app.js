@@ -61,13 +61,15 @@ var debug = require('debug')('tw5-ldap:server');
 var http = require('http');
 
 /**
- * Get port from environment and store in Express.
+ * Get port from configuration setup and store in Express.
  */
 
+var configs = require('./lib/configs');
 
-var servers_config = configs.get('server');
+var servers_config = configs.get('server_common');
 
-var port = normalizePort(servers_config.server.port || '3000');
+var port = normalizePort(servers_config.port);
+
 app.set('port', port);
 
 /**
@@ -139,7 +141,7 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = servers_config.server.ip_address || server.address();
+  var addr = servers_config.ip_address;
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
