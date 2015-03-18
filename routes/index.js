@@ -5,11 +5,17 @@ var LdapStrategy = require('passport-ldapauth');
 
 var configs = require('../lib/configs');
 
-var check_ldap_service = require('../lib/check_ldap_service');
+var OPTS = {
+    server: {
+        url: configs.get('ldap').url,
+        bindDn: configs.get('ldap').bindDn,
+        bindCredentials: configs.get('ldap').bindCredentials,
+        searchBase: configs.get('ldap').searchBase,
+        searchFilter: configs.get('ldap').searchFilter
+    }
+};
 
-//console.log(check_ldap_service);
-
-passport.use(new LdapStrategy(configs.get('ldap')));
+passport.use(new LdapStrategy(OPTS));
 
 router.use(passport.initialize());
 
