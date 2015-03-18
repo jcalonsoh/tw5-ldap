@@ -19,11 +19,14 @@ build/Release
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
-
+# OS X unwannted files
 .DS_Store
 
+# IDE unwannted files
 .idea/
 
+# App no need files
 config/*.yml
 
+# Autoenv setups
 .env
