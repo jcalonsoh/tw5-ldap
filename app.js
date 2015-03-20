@@ -82,13 +82,6 @@ var server = http.createServer(app).listen(app.get('port'), function(){
  console.log('Express server listening on port ' + app.get('port'));
 });
 
-var ldap_check = require('./lib/check_ldap_service').check;
-
-ldap_check(function(results) {
-    //if(err) return console.error(err);
-    console.log('Found %s connection to LDAP', results);
-});
-
 /**
  * Listen on provided port, on all network interfaces.
  */
