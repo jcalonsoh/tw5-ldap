@@ -1,1 +1,8 @@
 # OpenLdap Settings
+
+ldap:
+  url:              'ldap://10.200.201.98:389'
+  bindDn:           'cn=root,dc=bbr,dc=cl'
+  bindCredentials:  'dev.tes.123'
+  searchBase:       'dc=bbr,dc=cl'
+  searchFilter:     '(uid={{username}})'
