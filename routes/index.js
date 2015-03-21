@@ -2,10 +2,25 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LdapStrategy = require('passport-ldapauth');
+var needle = require('needle');
 var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer({});
+var proxy_ex = require('express-http-proxy');
+var proxyServer = require('http-route-proxy');
+
+var request = require('url');
+
+var request = require('request');
+
+var tunnel = require('tunnel');
+
+var neoProxy = require('neo-proxy');
+
+var proxy_mid = require('proxy-middleware');
 
 var configs = require('../lib/configs');
+
+var app = express();
 
 var OPTS = {
     server: {
@@ -21,30 +36,24 @@ passport.use(new LdapStrategy(OPTS));
 
 router.use(passport.initialize());
 
-/*
-var isAuthenticated = function(req,res,next){
-    if(res.isAuthenticated())
+function checkAuth(req, res, next) {
+    if (!app.get('username')) {
+        res.redirect('/login');
+    } else {
         next();
-    res.redirect('/login');
+    }
 }
-*/
 
-/* GET home page.
-router.get('/', ensureAuthenticated, function(req, res, next) {
-    return proxy.web(req, res, {
-        forward: {
-            host: '10.200.201.98',
-            port: 5000
-        }
-    });
+router.get('/', checkAuth, function(req, res, next) {
+    //proxy.web(req, res, { target: 'http://10.200.201.98:5000', method: 'GET' });
+    //res.render('proxy');
 });
-*/
 
-router.get('/', function(req, res, next) {
+router.get('/login', function(req, res, next) {
     res.render('login', { title: 'Tiddly Wiki LDAP login' });
 });
 
-router.post('/', function(req,res,next) {
+router.post('/login', function(req,res,next) {
     passport.authenticate("ldapauth", {session: false}, function(err,user,info){
         if (err) {
             return next(err); // will generate a 500 error
@@ -53,18 +62,23 @@ router.post('/', function(req,res,next) {
         if (! user) {
             return res.render('login', { success : false, message : 'authentication failed' });
         }
-        /*
-        return proxy.web(req, res, {
-            forward: {
-                port: 5000,
-                host: '10.200.201.98'
-            }
-        });*/
 
-        proxy.web(req, res, { target: 'http://10.200.201.95/centos6.6/', method: 'GET' });
+        app.set('username', req.body.username);
+        res.redirect('/');
 
     })(req, res, next);
 });
+
+router.all('/*', function(req,res,next) {
+    //res.render('proxy');
+    proxy.web(req, res, { target: 'http://10.200.201.98:5000'});
+});
+
+
+//router.all('/*', function(req, res, next) {
+//    proxy.web(req, res, { target: 'http://10.200.201.98:5000'});
+//    //req.pipe(request('http://10.200.201.98:5000' + req.url));
+//});
 
 
 module.exports = router;
