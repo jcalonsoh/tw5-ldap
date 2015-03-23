@@ -24,22 +24,6 @@ var OPTS = {
     }
 };
 
-function allowCrossDomain(req, res, next, err) {
-  console.log('allowingCrossDomain: ' + req.method + '=>' + req.url);
-  //console.log('Body => ' + req.body);
-  req.setHeader('Access-Control-Allow-Origin', '*');
-  req.setHeader('Access-Control-Allow-Methods', 'HEAD, GET, POST, PUT, DELETE, OPTIONS');
-  req.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Origin, Accept');
-  req.setHeader('Access-Control-Allow-Credentials', 'true');
-
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'HEAD, GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Origin, Accept');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-
-  next();
-};
-
 passport.use(new LdapStrategy(OPTS));
 app.use(cookieParser());
 
