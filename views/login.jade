@@ -10,5 +10,6 @@ block content
       p
       button.btn.btn-large.btn-primary(type="submit") Acceder
       p
-          div.clearfix
-          div.alert.alert-danger #{message}
+      if (message)
+        div.clearfix
+        div.alert.alert-danger #{message}
