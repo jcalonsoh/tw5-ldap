@@ -2,15 +2,12 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LdapStrategy = require('passport-ldapauth');
-var http = require('http');
-var _ = require('underscore');
 var setCookie = require('set-cookie');
 var cookieParser = require('cookie-parser')
 
 var configs = require('../lib/configs');
 
 var app = express();
-
 app.use(passport.session());
 
 
@@ -57,9 +54,7 @@ router.post('/login', function(req,res,next) {
         });
 
         app.set('username', req.body.username);
-
         console.log('Authentication Success Redirect => ' + configs.get('nginx').url);
-
         res.redirect(configs.get('nginx').url);
 
     })(req, res, next);
