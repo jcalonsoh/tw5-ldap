@@ -4,6 +4,7 @@ block content
   .container
     form.form-signin(action='/login', method="post")
       img(src='')
+      h1 #{title}
       h2.form-signin-heading Iniciar session
       input.input-block-level(type="text", name="username", placeholder="Usuario" )
       input.input-block-level(type="password", name="password", placeholder="Contraseña" )
