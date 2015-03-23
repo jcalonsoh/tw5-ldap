@@ -50,7 +50,7 @@ function checkAuth(req, res, next) {
 }
 
 router.get('/login', function(req, res, next) {
-    res.render('login', { title: 'Wiki Servicios' });
+    res.render('login', { title: configs.get('server_common').title });
 });
 
 router.post('/login', function(req,res,next) {
