@@ -2,16 +2,13 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LdapStrategy = require('passport-ldapauth');
-var needle = require('needle');
 var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer({});
-var expressproxy = require('express-http-proxy');
 var http = require('http');
 var _ = require('underscore');
+//var session = require('express-session');
 
-var request = require('request');
-var tunnel = require('tunnel');
-var url = require('url');
+var setCookie = require('set-cookie');
 
 var configs = require('../lib/configs');
 
@@ -56,10 +53,6 @@ function checkAuth(req, res, next) {
     }
 }
 
-router.get('/', checkAuth, function(req, res, next) {
-    proxy.web(req, res, { target: 'http://10.200.201.98:5000', method: 'GET' });
-});
-
 router.get('/login', function(req, res, next) {
     res.render('login', { title: 'Tiddly Wiki LDAP login' });
 });
@@ -75,13 +68,19 @@ router.post('/login', function(req,res,next) {
         }
 
         app.set('username', req.body.username);
-        res.redirect('/');
+
+        setCookie('tw5-session', req.body.username, {
+            res: res,
+            maxAge: null
+        });
+
+        res.redirect('http://localhost');
 
     })(req, res, next);
 });
 
-router.all('/*', function(req,res) {
-  proxy.web(req, res, { target: 'http://localhost:8888' });
+router.all('/*', checkAuth, function(req,res) {
+  res.redirect(configs.get('nginx').url + '/login');
 });
 
 module.exports = router;

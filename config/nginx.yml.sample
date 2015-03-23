@@ -1,0 +1,4 @@
+# Common server Settings
+
+nginx:
+  url:   http://localhost
