@@ -5,18 +5,13 @@ var LdapStrategy = require('passport-ldapauth');
 var needle = require('needle');
 var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer({});
-var proxy_ex = require('express-http-proxy');
-var proxyServer = require('http-route-proxy');
-
-var request = require('url');
+var expressproxy = require('express-http-proxy');
+var http = require('http');
+var _ = require('underscore');
 
 var request = require('request');
-
 var tunnel = require('tunnel');
-
-var neoProxy = require('neo-proxy');
-
-var proxy_mid = require('proxy-middleware');
+var url = require('url');
 
 var configs = require('../lib/configs');
 
@@ -32,6 +27,22 @@ var OPTS = {
     }
 };
 
+function allowCrossDomain(req, res, next, err) {
+  console.log('allowingCrossDomain: ' + req.method + '=>' + req.url);
+  //console.log('Body => ' + req.body);
+  req.setHeader('Access-Control-Allow-Origin', '*');
+  req.setHeader('Access-Control-Allow-Methods', 'HEAD, GET, POST, PUT, DELETE, OPTIONS');
+  req.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Origin, Accept');
+  req.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'HEAD, GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Origin, Accept');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  next();
+};
+
 passport.use(new LdapStrategy(OPTS));
 
 router.use(passport.initialize());
@@ -40,13 +51,13 @@ function checkAuth(req, res, next) {
     if (!app.get('username')) {
         res.redirect('/login');
     } else {
+      console.log(app.get('username'));
         next();
     }
 }
 
 router.get('/', checkAuth, function(req, res, next) {
-    //proxy.web(req, res, { target: 'http://10.200.201.98:5000', method: 'GET' });
-    //res.render('proxy');
+    proxy.web(req, res, { target: 'http://10.200.201.98:5000', method: 'GET' });
 });
 
 router.get('/login', function(req, res, next) {
@@ -58,7 +69,7 @@ router.post('/login', function(req,res,next) {
         if (err) {
             return next(err); // will generate a 500 error
         }
-        // Generate a JSON response reflecting authentication status
+
         if (! user) {
             return res.render('login', { success : false, message : 'authentication failed' });
         }
@@ -69,16 +80,8 @@ router.post('/login', function(req,res,next) {
     })(req, res, next);
 });
 
-router.all('/*', function(req,res,next) {
-    //res.render('proxy');
-    proxy.web(req, res, { target: 'http://10.200.201.98:5000'});
+router.all('/*', function(req,res) {
+  proxy.web(req, res, { target: 'http://localhost:8888' });
 });
-
-
-//router.all('/*', function(req, res, next) {
-//    proxy.web(req, res, { target: 'http://10.200.201.98:5000'});
-//    //req.pipe(request('http://10.200.201.98:5000' + req.url));
-//});
-
 
 module.exports = router;
