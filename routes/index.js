@@ -82,9 +82,9 @@ router.post('/login', function(req,res,next) {
 });
 
 router.all('/*', checkAuth, function(req,res) {
-    if(req.cookies=='')
+    console.log(req.cookies);
+    if(JSON.stringify(req.cookies) === '{}')
         res.redirect('/login');
-
     res.redirect(configs.get('nginx').url);
 });
 
