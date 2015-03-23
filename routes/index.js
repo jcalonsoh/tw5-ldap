@@ -85,6 +85,8 @@ router.all('/*', checkAuth, function(req,res) {
 
     var tw5_cookie = cookies('tw5-session');
 
+    console.log('Cookie: ' + tw5_cookie);
+
     if(tw5_cookie == '')
         res.redirect('/login');
 
