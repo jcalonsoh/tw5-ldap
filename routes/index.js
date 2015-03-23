@@ -50,7 +50,7 @@ function checkAuth(req, res, next) {
 }
 
 router.get('/login', function(req, res, next) {
-    res.render('login', { title: 'Tiddly Wiki LDAP login' });
+    res.render('login', { title: 'Wiki Servicios' });
 });
 
 router.post('/login', function(req,res,next) {
