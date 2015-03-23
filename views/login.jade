@@ -7,8 +7,8 @@ block content
       h2.form-signin-heading Iniciar session
       input.input-block-level(type="text", name="username", placeholder="Usuario" )
       input.input-block-level(type="password", name="password", placeholder="Contraseña" )
-      label.checkbox.
-        <input type="checkbox" value="remember-me" /> Recordar 
+      p
       button.btn.btn-large.btn-primary(type="submit") Acceder
-      if (message)
-        p #{message}
+      p
+          div.clearfix
+          div.alert.alert-danger #{message}
