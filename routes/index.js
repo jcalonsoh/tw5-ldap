@@ -9,8 +9,8 @@ var setCookie = require('set-cookie');
 var configs = require('../lib/configs');
 
 var app = express();
-app.use(express.cookieParser());
-app.use(express.session({secret: '1234567890QWERTY'}));
+
+app.use(passport.session());
 
 
 var OPTS = {
