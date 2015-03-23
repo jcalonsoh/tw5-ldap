@@ -5,6 +5,7 @@ var LdapStrategy = require('passport-ldapauth');
 var http = require('http');
 var _ = require('underscore');
 var setCookie = require('set-cookie');
+var cookies = require('cookie-getter');
 
 var configs = require('../lib/configs');
 
@@ -56,9 +57,6 @@ router.get('/login', function(req, res, next) {
     res.render('login', { title: configs.get('server_common').title });
 });
 
-
-
-
 router.post('/login', function(req,res,next) {
     passport.authenticate("ldapauth", {session: true}, function(err,user,info){
         if (err) {
@@ -84,10 +82,11 @@ router.post('/login', function(req,res,next) {
 });
 
 router.all('/*', checkAuth, function(req,res) {
-    setCookie('tw5-session', req.body.username, {
-        res: res,
-        maxAge: null
-    });
+
+    var tw5_cookie = cookies('tw5-session');
+
+    if(tw5_cookie == '')
+        res.redirect('/login');
 
     res.redirect(configs.get('nginx').url);
 });
