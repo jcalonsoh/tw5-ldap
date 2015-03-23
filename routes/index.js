@@ -2,12 +2,8 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LdapStrategy = require('passport-ldapauth');
-var httpProxy = require('http-proxy');
-var proxy = httpProxy.createProxyServer({});
 var http = require('http');
 var _ = require('underscore');
-//var session = require('express-session');
-
 var setCookie = require('set-cookie');
 
 var configs = require('../lib/configs');
@@ -64,7 +60,7 @@ router.post('/login', function(req,res,next) {
         }
 
         if (! user) {
-            return res.render('login', { success : false, message : 'authentication failed' });
+            return res.render('login', { success : false, message : 'Authentication Failed' });
         }
 
         app.set('username', req.body.username);
@@ -74,13 +70,15 @@ router.post('/login', function(req,res,next) {
             maxAge: null
         });
 
+        console.log('Authentication Success Redirect => ' + configs.get('nginx').url);
+
         res.redirect(configs.get('nginx').url);
 
     })(req, res, next);
 });
 
 router.all('/*', checkAuth, function(req,res) {
-  res.redirect(configs.get('nginx').url + '/login');
+  res.redirect(configs.get('nginx').url);
 });
 
 module.exports = router;
