@@ -5,7 +5,7 @@ var LdapStrategy = require('passport-ldapauth');
 var http = require('http');
 var _ = require('underscore');
 var setCookie = require('set-cookie');
-var cookies = require('cookie-getter');
+var cookieParser = require('cookie-parser')
 
 var configs = require('../lib/configs');
 
@@ -41,16 +41,16 @@ function allowCrossDomain(req, res, next, err) {
 };
 
 passport.use(new LdapStrategy(OPTS));
+app.use(cookieParser());
 
 router.use(passport.initialize());
 
 function checkAuth(req, res, next) {
+    console.log(app.get('username'));
     if (!app.get('username')) {
         res.redirect('/login');
-    } else {
-      console.log(app.get('username'));
-        next();
     }
+    next();
 }
 
 router.get('/login', function(req, res, next) {
@@ -82,12 +82,7 @@ router.post('/login', function(req,res,next) {
 });
 
 router.all('/*', checkAuth, function(req,res) {
-
-    var tw5_cookie = cookies('tw5-session');
-
-    console.log('Cookie: ' + tw5_cookie);
-
-    if(tw5_cookie == '')
+    if(req.cookies=='')
         res.redirect('/login');
 
     res.redirect(configs.get('nginx').url);
