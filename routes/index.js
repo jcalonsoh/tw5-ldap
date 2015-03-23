@@ -74,7 +74,7 @@ router.post('/login', function(req,res,next) {
             maxAge: null
         });
 
-        res.redirect('http://localhost');
+        res.redirect(configs.get('nginx').url);
 
     })(req, res, next);
 });
