@@ -9,6 +9,9 @@ var setCookie = require('set-cookie');
 var configs = require('../lib/configs');
 
 var app = express();
+app.use(express.cookieParser());
+app.use(express.session({secret: '1234567890QWERTY'}));
+
 
 var OPTS = {
     server: {
@@ -57,7 +60,7 @@ router.get('/login', function(req, res, next) {
 
 
 router.post('/login', function(req,res,next) {
-    passport.authenticate("ldapauth", {session: false}, function(err,user,info){
+    passport.authenticate("ldapauth", {session: true}, function(err,user,info){
         if (err) {
             return next(err); // will generate a 500 error
         }
