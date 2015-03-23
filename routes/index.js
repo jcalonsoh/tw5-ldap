@@ -53,6 +53,13 @@ router.get('/login', function(req, res, next) {
     res.render('login', { title: configs.get('server_common').title });
 });
 
+function cookie_login(){
+    setCookie('tw5-session', req.body.username, {
+        res: res,
+        maxAge: null
+    });
+}
+
 router.post('/login', function(req,res,next) {
     passport.authenticate("ldapauth", {session: false}, function(err,user,info){
         if (err) {
@@ -63,12 +70,9 @@ router.post('/login', function(req,res,next) {
             return res.render('login', { success : false, message : 'Authentication Failed' });
         }
 
-        app.set('username', req.body.username);
+        cookie_login();
 
-        setCookie('tw5-session', req.body.username, {
-            res: res,
-            maxAge: null
-        });
+        app.set('username', req.body.username);
 
         console.log('Authentication Success Redirect => ' + configs.get('nginx').url);
 
@@ -78,7 +82,8 @@ router.post('/login', function(req,res,next) {
 });
 
 router.all('/*', checkAuth, function(req,res) {
-  res.redirect(configs.get('nginx').url);
+    cookie_login;
+    res.redirect(configs.get('nginx').url);
 });
 
 module.exports = router;
