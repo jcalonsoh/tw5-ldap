@@ -67,7 +67,7 @@ router.post('/login', function(req,res,next) {
         }
 
         if (! user) {
-            return res.render('login', { success : false, message : 'Authentication Failed' });
+            return res.render('login', { title: configs.get('server_common').title, success : false, message : 'Authentication Failed' });
         }
 
         cookie_login();
